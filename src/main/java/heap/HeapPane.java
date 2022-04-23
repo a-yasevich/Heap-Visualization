@@ -18,7 +18,6 @@ public class HeapPane extends Pane {
 
     public HeapPane(Heap<Integer> heap) {
         this.heap = heap;
-        getChildren().add(new Text(20, 20, "Heap is empty"));
         setBackground(new Background(new BackgroundFill(Color.LIGHTSEAGREEN, CornerRadii.EMPTY, Insets.EMPTY)));
     }
 

@@ -3,15 +3,16 @@ package com.example.heapvisualization;
 import heap.Heap;
 import heap.HeapPane;
 import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
-
-import java.io.IOException;
 
 public class HeapApplication extends Application {
     Heap<Integer> heap = new Heap<>(8);
@@ -21,8 +22,10 @@ public class HeapApplication extends Application {
         BorderPane pane = new BorderPane();
         HeapPane heapPane = new HeapPane(heap);
         HBox hBox = new HBox(5);
+        Label statusLabel = new Label("Heap is empty");
         pane.setCenter(heapPane);
         pane.setTop(hBox);
+        pane.setBottom(statusLabel);
 
         Scene scene = new Scene(pane, 500, 500);
         primaryStage.setTitle("Heap Visualisation");
@@ -42,33 +45,40 @@ public class HeapApplication extends Application {
         insert.setOnMouseClicked(event -> {
             if (textField.getText().length() == 0) {
                 showDialog("You haven't entered anything!");
+                statusLabel.setText("");
                 return;
             }
-            int key;
+            int element;
             try {
-                key = Integer.parseInt(textField.getText());
+                element = Integer.parseInt(textField.getText());
             } catch (NumberFormatException e) {
                 showDialog("The value you have entered is not an integer!");
                 textField.setText("");
+                statusLabel.setText("");
                 return;
             }
-            System.out.println("Inserting " + key + " in heap with " + heap.size() + " elements");
-            heap.insert(key);
+            heap.insert(element);
             heapPane.displayHeap();
             textField.setText("");
+            statusLabel.setText("Inserted " + element + " in heap");
+
         });
 
         delete.setOnMouseClicked(e -> {
             if (heap.size() == 0) {
                 showDialog("Heap is empty!");
+                statusLabel.setText("");
+                return;
             }
-            heap.extract();
+            int extracted = heap.extract();
             heapPane.displayHeap();
             textField.setText("");
+            statusLabel.setText("Extracted " + extracted + " from heap");
         });
         clear.setOnMouseClicked(e -> {
             heap.clear();
             heapPane.displayHeap();
+            statusLabel.setText("Cleared heap");
         });
 
         primaryStage.show();
