@@ -15,7 +15,7 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class HeapApplication extends Application {
-    Heap<Integer> heap = new Heap<>(8);
+    private final Heap<Integer> heap = new Heap<>(8);
 
     @Override
     public void start(Stage primaryStage) {
@@ -58,7 +58,7 @@ public class HeapApplication extends Application {
                 return;
             }
             heap.insert(element);
-            heapPane.displayHeap();
+            heapPane.displayHeap(); //Изменив элементы кучи, вызываем у heapPane displayHeap(), чтобы её отрисовать
             textField.setText("");
             statusLabel.setText("Inserted " + element + " in heap");
 
