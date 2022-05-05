@@ -4,12 +4,10 @@ import java.util.NoSuchElementException;
 
 public class Heap<T extends Comparable<T>> {
     private static final int DEFAULT_CAPACITY = 8;
-    private int capacity;
     private int n;
     private Object[] a;
 
     public Heap(int initialCapacity) {
-        capacity = initialCapacity; //Текущее максимальное количество элементов
         n = 0; //Текущее количество элементов
         a = new Object[initialCapacity + 1]; //Размер + 1, чтобы было удобнее вычислять индексы
         //left child = current * 2, right child = current * 2 + 1, parent = current / 2
@@ -17,6 +15,13 @@ public class Heap<T extends Comparable<T>> {
 
     public Heap() {
         new Heap<>(DEFAULT_CAPACITY);
+    }
+
+    public T peek() {
+        if (size() <= 0) {
+            throw new NoSuchElementException();
+        }
+        return (T) a[1]; //Первый элемент массива - элемент на вершине кучи
     }
 
     public void insert(T element) {
@@ -80,11 +85,11 @@ public class Heap<T extends Comparable<T>> {
     }
 
     private void resizeIfNeeded() {
-        if (n != capacity) {
+        if (n != a.length - 1) {
             return; //Нет необходимости увеличивать размер
         }
-        this.capacity = capacity * 2; //Увеличиваем размер вдвое, аллоцируем новый массив и копируем в него старый
-        Object[] arr = new Object[capacity];
+        int newCapacity = n * 2 + 1; //Увеличиваем вместимость вдвое
+        Object[] arr = new Object[newCapacity]; //Аллоцируем новый массив и копируем в него старый
         System.arraycopy(a, 0, arr, 0, a.length);
         this.a = arr;
     }
