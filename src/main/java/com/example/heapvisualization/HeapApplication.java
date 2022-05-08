@@ -53,7 +53,7 @@ public class HeapApplication extends Application {
                 label.setText("Unable to insert " + value + " in heap!");
                 return;
             }
-            textField.setText("");
+            //textField.setText("");
             heap.insert(element);
             heapPane.displayHeap(); //Изменив элементы кучи, вызываем у heapPane displayHeap(), чтобы её отрисовать
             label.setText("Inserted " + element + " in heap");
