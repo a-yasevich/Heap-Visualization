@@ -5,33 +5,29 @@ import heap.HeapPane;
 import javafx.application.Application;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Button;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class HeapApplication extends Application {
     private final Heap<Integer> heap = new Heap<>(8);
+    private final TextField textField = new TextField();
+    private final Label label = new Label("Heap is empty");
 
     @Override
     public void start(Stage primaryStage) {
         BorderPane pane = new BorderPane();
         HeapPane heapPane = new HeapPane(heap);
         HBox hBox = new HBox(5);
-        Label statusLabel = new Label("Heap is empty");
         pane.setCenter(heapPane);
         pane.setTop(hBox);
-        pane.setBottom(statusLabel);
+        pane.setBottom(label);
 
         Scene scene = new Scene(pane, 500, 500);
         primaryStage.setTitle("Heap Visualisation");
         primaryStage.setScene(scene);
 
-        TextField textField = new TextField();
         textField.setPrefColumnCount(3);
         textField.setAlignment(Pos.BASELINE_RIGHT);
 
@@ -43,50 +39,54 @@ public class HeapApplication extends Application {
         hBox.setAlignment(Pos.BASELINE_CENTER);
 
         insert.setOnMouseClicked(event -> {
-            if (textField.getText().length() == 0) {
+            String value = textField.getText();
+            if (value.length() == 0) {
                 showDialog("You haven't entered anything!");
-                statusLabel.setText("");
+                label.setText("");
                 return;
             }
             int element;
             try {
-                element = Integer.parseInt(textField.getText());
+                element = Integer.parseInt(value);
             } catch (NumberFormatException e) {
                 showDialog("The value you have entered is not an integer!");
-                textField.setText("");
-                statusLabel.setText("");
+                label.setText("Unable to insert " + value + " in heap!");
                 return;
             }
+            textField.setText("");
             heap.insert(element);
             heapPane.displayHeap(); //Изменив элементы кучи, вызываем у heapPane displayHeap(), чтобы её отрисовать
-            textField.setText("");
-            statusLabel.setText("Inserted " + element + " in heap");
+            label.setText("Inserted " + element + " in heap");
 
         });
 
         delete.setOnMouseClicked(e -> {
             if (heap.size() == 0) {
                 showDialog("Heap is empty!");
-                statusLabel.setText("");
+                label.setText("Unable to delete element from empty heap!");
                 return;
             }
             int extracted = heap.extract();
             heapPane.displayHeap();
             textField.setText("");
-            statusLabel.setText("Extracted " + extracted + " from heap");
+            label.setText("Extracted " + extracted + " from heap");
         });
         clear.setOnMouseClicked(e -> {
             heap.clear();
             heapPane.displayHeap();
-            statusLabel.setText("Cleared heap");
+            label.setText("Cleared heap");
         });
 
         primaryStage.show();
     }
 
-    private static void showDialog(String message) {
+    private void showDialog(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION, message, ButtonType.OK);
         alert.getDialogPane().setMinHeight(80);
+        alert.setOnCloseRequest(event -> {
+            textField.setText("");
+            label.setText("");
+        });
         alert.show();
     }
 
